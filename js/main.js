@@ -35,6 +35,7 @@ const first_name_id = 'first_name'
 const last_name_id = 'last_name'
 const password_id = 'password'
 const email_id = 'email'
+const password_repeat_id = 'password-repeat'
 
 const sign_in_link_id = 'sign_in_link'
 const sign_up_form_id = 'sign_up_form'
@@ -62,6 +63,7 @@ const switch_to_sign_in = document.getElementById(sign_in_link_id);
 switch_to_sign_in.onclick = (e) => {
   document.getElementById(sign_up_form_id).style.display = "none"
   document.getElementById(sign_in_form_id).style.display = ""
+
 }
 
 

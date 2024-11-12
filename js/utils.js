@@ -1,7 +1,17 @@
-const formValues = {}  // Сюда пишутся значения формы (Object как в Java, или dict из Python)
-const formValidation = {}  // Сюда пишутся статусы валидации каждого поля. Если поле ни разу не валидировалось,
-// то при обращении к Object вернётся undefined, который при логическом сравнении обрабатывается как false
+const first_name_id = 'first_name'
+const last_name_id = 'last_name'
+const password_id = 'password'
+const email_id = 'email'
+const password_repeat_id = 'password-repeat'
 
+// Сюда пишутся значения формы (Object как в Java, или dict из Python)
+const formValues = {first_name_id: '',last_name_id:'',
+                    password_id:'',email_id:'',password_repeat_id:'' }
+
+// Сюда пишутся статусы валидации каждого поля. Если поле ни разу не валидировалось,
+// то при обращении к Object вернётся undefined, который при логическом сравнении обрабатывается как false
+const formValidation = {first_name_id: undefined,last_name_id:undefined,
+                        password_id:undefined,email_id:undefined,password_repeat_id:undefined }
 
 // Объявляется и инициализируется константная переменная
 // Инициализация функцией, заданной в стрелочном виде
@@ -35,7 +45,7 @@ export const getValidationStatus = () => {
 }
 
 
-// Функция возвращающая которая ставит значение поля в форме по ключу
+// Функция, которая ставит значение поля в форме по ключу
 export const setFormValue = (valueKey, newValue, validator) => {
   formValues[valueKey] = newValue
   if (validator !== undefined) {
