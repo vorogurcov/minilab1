@@ -17,7 +17,8 @@ const formValues = {[first_name_id]: '',[last_name_id]:'',
 
 // Сюда пишутся статусы валидации каждого поля. Если поле ни разу не валидировалось,
 // то при обращении к Object вернётся undefined, который при логическом сравнении обрабатывается как false
-const formValidation = {[password_id]:undefined,[email_id]:undefined,[password_repeat_id]:undefined }
+const formValidation = {[password_id]:undefined,[email_id]:undefined, [last_name_id]:undefined,
+                        [password_repeat_id]:undefined, [first_name_id]:undefined }
 
 const signFormValidation = {[sign_in_email_id]: undefined, [sign_in_pass_id]: undefined}
 
@@ -29,6 +30,12 @@ export const validatePassword = (pass_id, password) => {
   // formValidation.password = ...  // formValidation['password'] = ... - то же самое, но другой синтаксис
 
   let result = regExp.test(password)
+  if(pass_id === password_repeat_id && formValues[password_id] !== password) {
+    result = false
+    document.getElementById(pass_id).setCustomValidity("Repeated password does not match the password itself!");
+  }
+
+
   if(Object.getOwnPropertyNames(formValidation).includes(pass_id))
     formValidation[pass_id] = result;
   else
@@ -66,39 +73,55 @@ export const getSignInValidationStatus = () => {
 // Функция, которая ставит значение поля в форме по ключу
 export const setFormValue = (valueKey, newValue, validator) => {
   formValues[valueKey] = newValue
+  let validationForm;
+  if (Object.getOwnPropertyNames(formValidation).includes(valueKey))
+    validationForm = formValidation;
+  else
+    validationForm = signFormValidation;
+
 
   if (validator !== undefined) {
-    validator(valueKey,newValue)
-    let validationForm;
+    validator(valueKey, newValue)
+
     console.log(Object.getOwnPropertyNames(formValidation))
-    if(Object.getOwnPropertyNames(formValidation).includes(valueKey))
-      validationForm = formValidation;
-    else
-      validationForm = signFormValidation;
-    if(validationForm[valueKey] == true) {
+
+    if (validationForm[valueKey] == true) {
       document.getElementById(valueKey).classList.remove("invalid");
       document.getElementById(valueKey).classList.add("valid");
-    }
-    else
-    {
+    } else {
       document.getElementById(valueKey).classList.remove("valid");
       document.getElementById(valueKey).classList.add("invalid");
     }
-
-    if (!getValidationStatus())
-    {
-      document.getElementById(but_sign_up_id).disabled = true
-    }
-    else
-      document.getElementById(but_sign_up_id).disabled = false
-
-    if(!getSignInValidationStatus())
-    {
-      document.getElementById(but_sign_in_id).disabled = true
-    }
-    else
-      document.getElementById(but_sign_in_id).disabled = false
   }
+  else
+  {
+    if(newValue === '') {
+      document.getElementById(valueKey).classList.remove("valid");
+      document.getElementById(valueKey).classList.add("invalid");
+      validationForm[valueKey] = false;
+    }
+    else
+    {
+      document.getElementById(valueKey).classList.remove("invalid");
+      document.getElementById(valueKey).classList.add("valid");
+      validationForm[valueKey] = true;
+    }
+  }
+
+  if (!getValidationStatus())
+  {
+    document.getElementById(but_sign_up_id).disabled = true
+  }
+  else
+    document.getElementById(but_sign_up_id).disabled = false
+
+  if(!getSignInValidationStatus())
+  {
+    document.getElementById(but_sign_in_id).disabled = true
+  }
+  else
+    document.getElementById(but_sign_in_id).disabled = false
+
 }
 
 export const returnClick = () => {

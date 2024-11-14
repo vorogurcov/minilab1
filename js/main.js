@@ -81,7 +81,6 @@ const switch_to_sign_in = document.getElementById(sign_in_link_id);
 switch_to_sign_in.onclick = (e) => {
   document.getElementById(sign_up_form_id).style.display = "none"
   document.getElementById(sign_in_form_id).style.display = ""
-
 }
 
 const sign_up_btn = document.getElementById(sign_up_btn_id);
