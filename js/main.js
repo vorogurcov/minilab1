@@ -1,4 +1,4 @@
-import {setFormValue, submitSignUpForm, validateEmail, validatePassword} from "./utils.js"
+import {setFormValue, submitSignUpForm, validateEmail, validatePassword, returnClick} from "./utils.js"
 
 
 ////// ДЕМОНСТРАЦИОННЫЙ УЧАСТОК КОДА. На оценку не влияет, исключительно для саморазвития.
@@ -41,8 +41,9 @@ const sign_in_link_id = 'sign_in_link'
 const sign_up_form_id = 'sign_up_form'
 const sign_in_form_id = 'sign_in_form'  // Пригодится
 const sign_up_btn_id = 'sign_up_btn'
-
-
+const return_btn_id = 'return_button'
+const sign_in_email_id = 'email_sign_in'
+const sign_in_pass_id = "password_sign_in"
 
 // Получаем элемент DOM-дерева по id и присваиваем значение аттрибуту oninput
 // oninput вызывается с параметром "event" каждый раз, когда ввод меняется
@@ -66,6 +67,14 @@ password.oninput = (e) => setFormValue(password_id,e.target.value, validatePassw
 const repeated_password = document.getElementById(password_repeat_id);
 repeated_password.oninput = (e) => setFormValue(password_repeat_id,e.target.value, validatePassword)
 
+const pass_sign_in = document.getElementById(sign_in_pass_id);
+pass_sign_in.oninput = (e) => setFormValue(sign_in_pass_id, e.target.value, validatePassword);
+
+const email_sign_in = document.getElementById(sign_in_email_id)
+email_sign_in.oninput = (e) => setFormValue(sign_in_email_id, e.target.value, validateEmail)
+
+const return_but = document.getElementById(return_btn_id);
+return_but.addEventListener("click",returnClick);
 // Меняем стили объекта DOM дерева. Это позволяет скрыть форму регистрации и показать форму авторизации
 // Объект формы не исключается из DOM дерева, а просто становистя невидимым
 const switch_to_sign_in = document.getElementById(sign_in_link_id);
@@ -74,7 +83,6 @@ switch_to_sign_in.onclick = (e) => {
   document.getElementById(sign_in_form_id).style.display = ""
 
 }
-
 
 const sign_up_btn = document.getElementById(sign_up_btn_id);
 sign_up_btn.onclick = (e) => {

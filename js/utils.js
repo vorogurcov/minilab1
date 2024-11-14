@@ -3,9 +3,14 @@ const last_name_id = 'last_name'
 const password_id = 'password'
 const email_id = 'email'
 const password_repeat_id = 'password-repeat'
+
 const but_sign_in_id = "sign_in_btn"
 const but_sign_up_id = "sign_up_btn"
 
+const sign_up_form_id = 'sign_up_form'
+const sign_in_form_id = 'sign_in_form'
+const sign_in_email_id = 'email_sign_in'
+const sign_in_pass_id = "password_sign_in"
 // Сюда пишутся значения формы (Object как в Java, или dict из Python)
 const formValues = {[first_name_id]: '',[last_name_id]:'',
                     [password_id]:'',[email_id]:'',[password_repeat_id]:'' }
@@ -13,6 +18,8 @@ const formValues = {[first_name_id]: '',[last_name_id]:'',
 // Сюда пишутся статусы валидации каждого поля. Если поле ни разу не валидировалось,
 // то при обращении к Object вернётся undefined, который при логическом сравнении обрабатывается как false
 const formValidation = {[password_id]:undefined,[email_id]:undefined,[password_repeat_id]:undefined }
+
+const signFormValidation = {[sign_in_email_id]: undefined, [sign_in_pass_id]: undefined}
 
 // Объявляется и инициализируется константная переменная
 // Инициализация функцией, заданной в стрелочном виде
@@ -22,7 +29,10 @@ export const validatePassword = (pass_id, password) => {
   // formValidation.password = ...  // formValidation['password'] = ... - то же самое, но другой синтаксис
 
   let result = regExp.test(password)
-  formValidation[pass_id] = result
+  if(Object.getOwnPropertyNames(formValidation).includes(pass_id))
+    formValidation[pass_id] = result;
+  else
+    signFormValidation[pass_id] = result
   return result
 }
 
@@ -33,7 +43,10 @@ export const validateEmail = (em_id,email) => {
   const regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   let result = regExp.test(email.toLowerCase())
-  formValidation[em_id] = result
+  if(Object.getOwnPropertyNames(formValidation).includes(em_id))
+    formValidation[em_id] = result
+  else
+    signFormValidation[em_id] = result
   return result
 
 }
@@ -47,14 +60,22 @@ export const getValidationStatus = () => {
   return Object.values(formValidation).every((validationStatus) => !!validationStatus)
 }
 
-
+export const getSignInValidationStatus = () => {
+  return Object.values(signFormValidation).every((validationStatus) => !!validationStatus)
+}
 // Функция, которая ставит значение поля в форме по ключу
 export const setFormValue = (valueKey, newValue, validator) => {
   formValues[valueKey] = newValue
+
   if (validator !== undefined) {
-    formValidation[valueKey] = validator(valueKey,newValue)
-    console.log(valueKey, " ", formValidation[valueKey])
-    if(formValidation[valueKey] == true) {
+    validator(valueKey,newValue)
+    let validationForm;
+    console.log(Object.getOwnPropertyNames(formValidation))
+    if(Object.getOwnPropertyNames(formValidation).includes(valueKey))
+      validationForm = formValidation;
+    else
+      validationForm = signFormValidation;
+    if(validationForm[valueKey] == true) {
       document.getElementById(valueKey).classList.remove("invalid");
       document.getElementById(valueKey).classList.add("valid");
     }
@@ -71,9 +92,19 @@ export const setFormValue = (valueKey, newValue, validator) => {
     else
       document.getElementById(but_sign_up_id).disabled = false
 
+    if(!getSignInValidationStatus())
+    {
+      document.getElementById(but_sign_in_id).disabled = true
+    }
+    else
+      document.getElementById(but_sign_in_id).disabled = false
   }
 }
 
+export const returnClick = () => {
+  document.getElementById(sign_up_form_id).style.display = ""
+  document.getElementById(sign_in_form_id).style.display = "none"
+}
 
 // Функция для обработки отправки формы регистрации
 // В этой функции должен быть http запрос на сервер для регистрации пользователя (сейчас просто демонстрация)
