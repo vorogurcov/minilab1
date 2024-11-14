@@ -82,8 +82,7 @@ export const setFormValue = (valueKey, newValue, validator) => {
 
   if (validator !== undefined) {
     validator(valueKey, newValue)
-
-    console.log(Object.getOwnPropertyNames(formValidation))
+    
 
     if (validationForm[valueKey] == true) {
       document.getElementById(valueKey).classList.remove("invalid");
